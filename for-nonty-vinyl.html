@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Nonty — Side A</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Special+Elite&family=Caveat:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --walnut-1:#2b1d16;
+    --walnut-2:#1a110c;
+    --brass:#c8a052;
+    --brass-soft:#e6c98a;
+    --cream:#f3e8d3;
+    --maroon:#7a2e2e;
+    --maroon-dark:#531e1e;
+    --ink:#2c211a;
+    --groove:#141010;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    min-height:100dvh;
+    background:
+      radial-gradient(ellipse 100% 60% at 50% -10%, #3a281c 0%, transparent 60%),
+      linear-gradient(180deg, var(--walnut-1), var(--walnut-2));
+    font-family:'Cormorant Garamond', Georgia, serif;
+    color:var(--cream);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* subtle wood-grain texture */
+  .grain{
+    position:absolute; inset:0;
+    background-image:repeating-linear-gradient(180deg, rgba(255,255,255,.02) 0px, transparent 2px, transparent 4px);
+    pointer-events:none;
+  }
+  .vignette{
+    position:absolute; inset:0;
+    box-shadow:inset 0 0 160px 40px rgba(0,0,0,.65);
+    pointer-events:none;
+  }
+
+  /* dust mote particles */
+  .mote{
+    position:absolute;
+    width:3px; height:3px;
+    background:var(--brass-soft);
+    border-radius:50%;
+    opacity:0;
+    animation:drift linear infinite;
+    pointer-events:none;
+  }
+  @keyframes drift{
+    0%{transform:translate(0,0); opacity:0;}
+    15%{opacity:.5;}
+    85%{opacity:.3;}
+    100%{transform:translate(var(--dx,30px),-90vh); opacity:0;}
+  }
+
+  /* ---------- STAGE ---------- */
+  .stage{
+    position:relative;
+    z-index:2;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    width:min(90vw, 380px);
+  }
+
+  .eyebrow{
+    font-family:'Special Elite', monospace;
+    font-size:.68rem;
+    letter-spacing:.3em;
+    text-transform:uppercase;
+    color:var(--brass-soft);
+    opacity:.75;
+    margin-bottom:22px;
+    animation:pulseFade 2.8s ease-in-out infinite;
+  }
+  @keyframes pulseFade{0%,100%{opacity:.5;}50%{opacity:.9;}}
+
+  /* turntable plinth */
+  .plinth{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:linear-gradient(155deg,#3d2a1c,#241610);
+    border-radius:14px;
+    box-shadow:
+      0 30px 60px -15px rgba(0,0,0,.7),
+      inset 0 0 0 1px rgba(255,255,255,.06),
+      inset 0 2px 4px rgba(255,255,255,.08);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .plinth:focus-visible{outline:2px solid var(--brass-soft); outline-offset:6px;}
+
+  .vinyl{
+    position:relative;
+    width:72%;
+    aspect-ratio:1/1;
+    border-radius:50%;
+    background:
+      repeating-radial-gradient(circle at center,
+        var(--groove) 0px, var(--groove) 2px,
+        #1e1a1a 3px, #1e1a1a 4px);
+    box-shadow:0 10px 30px rgba(0,0,0,.6), inset 0 0 20px rgba(0,0,0,.5);
+    transition:transform 6s linear;
+  }
+  .vinyl::before{
+    content:'';
+    position:absolute; inset:0;
+    border-radius:50%;
+    background:linear-gradient(115deg, rgba(255,255,255,.12), transparent 40%, transparent 60%, rgba(255,255,255,.05));
+    pointer-events:none;
+  }
+  .label{
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    width:34%; aspect-ratio:1/1;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #9a4444, var(--maroon) 55%, var(--maroon-dark) 100%);
+    box-shadow:inset 0 0 0 2px rgba(230,201,138,.4), 0 4px 10px rgba(0,0,0,.4);
+    display:flex; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .label span{
+    font-family:'Caveat', cursive;
+    font-size:.85rem;
+    color:var(--brass-soft);
+    line-height:1.1;
+    transform:rotate(-8deg);
+  }
+  .label::after{
+    content:'';
+    position:absolute;
+    width:8%; aspect-ratio:1/1;
+    background:var(--walnut-2);
+    border-radius:50%;
+  }
+
+  .vinyl.spin{
+    animation:spin 3.5s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  /* tonearm */
+  .tonearm{
+    position:absolute;
+    top:6%; right:6%;
+    width:42%;
+    height:42%;
+    transform-origin:88% 12%;
+    transform:rotate(-28deg);
+    transition:transform 1.1s cubic-bezier(.3,.1,.2,1);
+    pointer-events:none;
+    z-index:5;
+  }
+  .tonearm .base{
+    position:absolute; top:0; right:0;
+    width:22%; aspect-ratio:1/1;
+    background:radial-gradient(circle at 35% 30%, var(--brass-soft), var(--brass) 60%, #93732f);
+    border-radius:50%;
+    box-shadow:0 4px 8px rgba(0,0,0,.5);
+  }
+  .tonearm .arm{
+    position:absolute;
+    top:8%; right:8%;
+    width:78%; height:8%;
+    background:linear-gradient(90deg, var(--brass-soft), var(--brass));
+    border-radius:4px;
+    box-shadow:0 3px 6px rgba(0,0,0,.4);
+  }
+  .tonearm .head{
+    position:absolute;
+    bottom:-6%; left:-4%;
+    width:16%; aspect-ratio:1/1;
+    background:var(--ink);
+    border-radius:3px;
+    box-shadow:0 2px 4px rgba(0,0,0,.5);
+  }
+  .plinth.playing .tonearm{
+    transform:rotate(2deg);
+  }
+
+  .tap-hint{
+    margin-top:22px;
+    font-family:'Special Elite', monospace;
+    font-size:.7rem;
+    letter-spacing:.15em;
+    color:var(--brass-soft);
+    opacity:.6;
+  }
+
+  /* ---------- SLEEVE / LETTER ---------- */
+  .sleeve-wrap{
+    position:fixed; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none;
+    padding:24px;
+    z-index:10;
+    transition:opacity .8s ease .2s;
+  }
+  .sleeve-wrap.show{
+    opacity:1; pointer-events:auto;
+    background:rgba(10,6,4,.55);
+    backdrop-filter:blur(4px);
+  }
+  .sleeve{
+    position:relative;
+    width:min(92vw,420px);
+    max-height:88vh;
+    overflow-y:auto;
+    background:var(--cream);
+    border-radius:6px;
+    padding:0;
+    box-shadow:0 50px 100px -20px rgba(0,0,0,.75);
+    transform:translateY(30px) scale(.95);
+    opacity:0;
+    transition:transform .8s cubic-bezier(.22,.85,.25,1) .1s, opacity .8s ease .1s;
+  }
+  .sleeve-wrap.show .sleeve{transform:translateY(0) scale(1); opacity:1;}
+
+  .sleeve-header{
+    background:linear-gradient(155deg, var(--maroon), var(--maroon-dark));
+    padding:22px 28px;
+    border-radius:6px 6px 0 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .sleeve-header::after{
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:3px;
+    background:linear-gradient(90deg,transparent,var(--brass-soft),transparent);
+  }
+  .sleeve-header .label-eyebrow{
+    font-family:'Special Elite', monospace;
+    font-size:.62rem;
+    letter-spacing:.28em;
+    text-transform:uppercase;
+    color:var(--brass-soft);
+    opacity:.85;
+  }
+  .sleeve-header h1{
+    font-family:'Abril Fatface', serif;
+    font-size:clamp(1.6rem,7vw,2.1rem);
+    color:var(--cream);
+    margin-top:6px;
+    font-weight:400;
+  }
+
+  .sleeve-body{
+    padding:clamp(26px,6vw,38px) clamp(26px,6vw,34px) 34px;
+    color:var(--ink);
+  }
+  .sleeve-to{
+    font-style:italic;
+    font-size:1.3rem;
+    margin-bottom:18px;
+  }
+  .sleeve-message{
+    font-size:1.3rem;
+    line-height:1.6;
+  }
+  .sleeve-message .big{
+    display:block;
+    font-family:'Caveat', cursive;
+    font-weight:700;
+    font-size:clamp(2.4rem,9vw,3.1rem);
+    color:var(--maroon);
+    line-height:1.1;
+    margin:4px 0 12px;
+  }
+  .sleeve-sign{
+    margin-top:28px;
+    text-align:right;
+    font-family:'Caveat', cursive;
+    font-size:1.5rem;
+    color:var(--maroon);
+  }
+
+  .track-divider{
+    display:flex; align-items:center; gap:10px;
+    margin:26px 0 20px;
+    color:#a89377;
+    font-family:'Special Elite', monospace;
+    font-size:.65rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+  }
+  .track-divider::before, .track-divider::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:#d9c9a8;
+  }
+
+  .song-btn{
+    display:flex; align-items:center; gap:11px;
+    justify-content:center;
+    background:linear-gradient(155deg, var(--maroon), var(--maroon-dark));
+    color:var(--cream);
+    text-decoration:none;
+    padding:13px 22px;
+    border-radius:4px;
+    font-family:'Special Elite', monospace;
+    font-size:.85rem;
+    letter-spacing:.05em;
+    width:100%;
+    box-shadow:0 12px 26px -6px rgba(83,30,30,.55);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .song-btn:hover{transform:translateY(-2px); box-shadow:0 16px 32px -6px rgba(83,30,30,.6);}
+  .song-btn svg{width:18px; height:18px; fill:var(--cream); flex-shrink:0;}
+
+  .close-hint{
+    text-align:center;
+    margin-top:18px;
+    font-size:.74rem;
+    letter-spacing:.06em;
+    color:#a89377;
+  }
+
+  .sleeve::-webkit-scrollbar{width:6px;}
+  .sleeve::-webkit-scrollbar-thumb{background:var(--brass); border-radius:3px;}
+
+  a:focus-visible{outline:2px solid var(--brass-soft); outline-offset:3px;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="stage">
+  <div class="eyebrow">side A · for nonty</div>
+
+  <div class="plinth" id="plinth" role="button" tabindex="0" aria-label="Press play on the record">
+    <div class="tonearm" id="tonearm">
+      <div class="base"></div>
+      <div class="arm"></div>
+      <div class="head"></div>
+    </div>
+    <div class="vinyl" id="vinyl">
+      <div class="label"><span>for<br>nonty</span></div>
+    </div>
+  </div>
+
+  <div class="tap-hint">press play</div>
+</div>
+
+<div class="sleeve-wrap" id="sleeveWrap">
+  <div class="sleeve">
+    <div class="sleeve-header">
+      <div class="label-eyebrow">Now Playing · Side A</div>
+      <h1>For Nonty</h1>
+    </div>
+    <div class="sleeve-body">
+      <div class="sleeve-to">My Nonty,</div>
+      <div class="sleeve-message">
+        <span class="big">I love you.</span>
+        Every single day, more than words can hold.
+      </div>
+      <div class="sleeve-sign">— yours, always</div>
+
+      <div class="track-divider">track 01</div>
+
+      <a class="song-btn" href="https://youtu.be/fGFB29lQ-Vs?si=uN1gakOXJ3Z0_bU9" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M9 19V6l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        play our song
+      </a>
+      <div class="close-hint">this one's for us</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const plinth = document.getElementById('plinth');
+  const vinyl = document.getElementById('vinyl');
+  const sleeveWrap = document.getElementById('sleeveWrap');
+
+  function pressPlay(){
+    if (plinth.classList.contains('playing')) return;
+    plinth.classList.add('playing');
+    vinyl.classList.add('spin');
+    setTimeout(() => sleeveWrap.classList.add('show'), 1300);
+  }
+
+  plinth.addEventListener('click', pressPlay);
+  plinth.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pressPlay(); }
+  });
+
+  function spawnMote(){
+    const el = document.createElement('div');
+    el.className = 'mote';
+    el.style.left = Math.random()*100 + 'vw';
+    el.style.bottom = '-2%';
+    el.style.setProperty('--dx', (Math.random()*60-30)+'px');
+    el.style.animationDuration = (8 + Math.random()*8) + 's';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 17000);
+  }
+  setInterval(spawnMote, 900);
+  for(let i=0;i<5;i++) setTimeout(spawnMote, i*400);
+</script>
+
+</body>
+</html>
